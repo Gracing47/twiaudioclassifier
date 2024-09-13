@@ -1,0 +1,10 @@
+.vscode
+.env
+seaborn_env
+node_modules
+# Ignoriere alle Dateien im übergeordneten Verzeichnis
+../
+
+# Ignoriere bestimmte Dateitypen
+*.pyc
+*.log
