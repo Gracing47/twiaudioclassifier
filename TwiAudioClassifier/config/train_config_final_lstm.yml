@@ -1,0 +1,41 @@
+# Finale LSTM Modell Konfiguration für Twi Audio Klassifizierung
+
+# Daten-Konfiguration
+data:
+  data_dir: "data/raw"
+  train_metadata: "data/processed/train_metadata.csv"
+  val_metadata: "data/processed/val_metadata.csv"
+
+# Modell-Konfiguration
+model:
+  type: "lstm"
+  feature_type: "mfcc"
+  num_classes: 2
+  params:
+    input_size: 40
+    hidden_size: 16    # Noch kleinere Hidden Size
+    num_layers: 1
+    dropout: 0.6      # Erhöhter Dropout
+    bidirectional: true
+
+# Training-Parameter
+training:
+  seed: 42
+  num_epochs: 15
+  batch_size: 4       # Noch kleinere Batches
+  learning_rate: 0.0005
+  weight_decay: 0.02  # Stärkere Regularisierung
+  num_workers: 4
+  output_dir: "experiments/final_lstm"
+  early_stopping:
+    patience: 5
+    min_delta: 0.001
+
+# Augmentation
+augmentation:
+  enabled: true
+  time_stretch_range: [0.8, 1.2]
+  mask_time_prob: 0.6   # Erhöhte Augmentation
+  mask_freq_prob: 0.6
+  noise_prob: 0.5
+  noise_factor: 0.03

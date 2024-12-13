@@ -1,0 +1,65 @@
+# Test-Konfiguration für Twi Audio Klassifizierung
+
+# Daten-Konfiguration
+data:
+  data_dir: "data/raw/clips"
+  test_metadata: "data/raw/test_simple.tsv"
+  audio_dir: "data/raw/clips"
+
+# Model checkpoints
+checkpoints:
+  cnn: "experiments/models/cnn/checkpoints/best_model.pt"
+  lstm: "experiments/models/lstm/checkpoints/best_model.pt"
+
+# Feature-Extraktion
+features:
+  sample_rate: 32000  # Match LSTM training config
+  n_mels: 128
+  n_mfcc: 40
+  n_fft: 2048
+  hop_length: 512
+  target_length: 1.0
+  stats_file: "experiments/feature_stats/feature_stats.yml"
+
+# Modell-Konfigurationen
+models:
+  cnn:
+    checkpoint: "experiments/models/cnn/checkpoints/best_model.pt"
+    config: "config/train_config_cnn.yml"
+    feature_type: "melspec"
+    channels: [4, 8]  # Match saved model
+    kernel_size: 3    # Match saved model
+    stride: 1
+    padding: 1       # Match saved model
+    pool_size: 2     # Match saved model
+    dropout: 0.5
+    dense_units: 32
+  
+  lstm:
+    checkpoint: "experiments/models/lstm/checkpoints/best_model.pt"
+    config: "config/train_config_lstm.yml"
+    feature_type: "mfcc"
+    input_size: 40
+    hidden_size: 16  # Will be doubled to 32 due to bidirectional
+    num_layers: 1
+    dropout: 0.5
+
+# Evaluierungs-Parameter
+evaluation:
+  batch_size: 4
+  num_workers: 4
+  output_dir: "experiments/test_evaluation"
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1
+  visualizations:
+    - confusion_matrix
+    - prediction_distribution
+
+# Logging-Konfiguration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(levelname)s - %(message)s"
+  file: "test_evaluation.log"

@@ -1,0 +1,45 @@
+# CNN Model Configuration for Twi Audio Classification
+
+# Data Configuration
+data:
+  data_dir: "data/raw"
+  train_metadata: "data/processed/train_metadata.csv"
+  val_metadata: "data/processed/val_metadata.csv"
+
+# Model Configuration
+model:
+  type: "cnn"
+  feature_type: "melspec"
+  num_classes: 2
+  params:
+    input_channels: 1
+    conv_channels: [16]     # Single conv layer
+    kernel_sizes: [7]       # Larger kernel for better feature capture
+    pool_sizes: [4]         # Larger pooling
+    dropout: 0.3           # Moderate dropout
+    fc_sizes: [32]         # Smaller FC layer
+
+# Training Parameters
+training:
+  seed: 42
+  num_epochs: 50        # More epochs
+  batch_size: 8         # Smaller batch size
+  learning_rate: 0.001  # Increased learning rate
+  weight_decay: 0.0001  # Reduced weight decay
+  warmup_epochs: 5      # Added warmup epochs
+  num_workers: 4
+  output_dir: "experiments/final/cnn"
+  class_weights: [0.5, 2.0]  # Heavily favor class 1
+  early_stopping:
+    patience: 10  # Increased patience
+    min_delta: 0.001
+  gradient_clip: 1.0  # Added gradient clipping
+
+# Augmentation
+augmentation:
+  enabled: true
+  time_stretch_range: [0.9, 1.1]  # Reduced range
+  mask_time_prob: 0.3  # Reduced probability
+  mask_freq_prob: 0.3
+  noise_prob: 0.2
+  noise_factor: 0.01

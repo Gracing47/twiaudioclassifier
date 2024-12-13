@@ -1,0 +1,44 @@
+# LSTM Model Configuration for Twi Audio Classification
+
+# Data Configuration
+data:
+  data_dir: "data/raw/clips"
+  train_metadata: "data/processed/train_metadata.csv"
+  val_metadata: "data/processed/val_metadata.csv"
+
+# Model Configuration
+model:
+  type: "lstm"
+  feature_type: "mfcc"
+  num_classes: 2
+  params:
+    input_size: 40
+    hidden_size: 32
+    num_layers: 1
+    dropout: 0.3
+    bidirectional: false
+
+# Training Parameters
+training:
+  seed: 42
+  num_epochs: 30
+  batch_size: 16
+  learning_rate: 0.0003
+  weight_decay: 0.001
+  num_workers: 4
+  output_dir: "experiments/final_lstm"
+  class_weights: [0.5, 2.0]  # Heavily favor class 1
+  early_stopping:
+    patience: 10
+    min_delta: 0.001
+  gradient_clip: 1.0
+
+# Feature Processing
+features:
+  sample_rate: 32000
+  n_mfcc: 40
+  n_fft: 2048
+  hop_length: 512
+  n_mels: 128
+  normalize: true
+  global_normalize: true
